@@ -1,13 +1,33 @@
 import requests
-import json
-from pprint import pprint
 
-ini = "cheese"
-end = "jesus"
+ini = "Cheese"
+end = "Jesus"
 
-API = "https://en.wikipedia.org/w/api.php?action=query&titles={}&prop=linkshere&format=json"
+API = "https://en.wikipedia.org/w/api.php?action=query&titles={}&prop=links&pllimit=100&plnamespace=0&format=json"
 
-start = "|".join((ini, end))
+start = '|'.join((ini,))
 
-pprint(requests.get(API.format(start)).json())
+seen = []
+search = []
+search.append(ini)
+
+while True:
+    n = search.pop()
+    if n in seen:
+        continue
+    seen.append(n)
+    try:
+        print('search', n)
+        json = requests.get(API.format(n)).json()
+        key = list(json['query']['pages'].keys())[0]
+        links = json['query']['pages'][key]['links']
+        news = [t['title'] for t in links if t['title'] not in search]
+
+        if end in news:
+            print("I FOUND {}".format(end))
+            break
+
+        search.extend(news)
+    except Exception:
+        pass
 
