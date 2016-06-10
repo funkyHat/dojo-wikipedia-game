@@ -5,8 +5,6 @@ end = "Jesus"
 
 API = "https://en.wikipedia.org/w/api.php?action=query&titles={}&prop=links&pllimit=100&plnamespace=0&format=json"
 
-start = '|'.join((ini,))
-
 seen = []
 search = []
 search.append(ini)
